@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - SeaTech</title>
+    <title>Create Account - SeaTech</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
 </head>
@@ -16,21 +16,23 @@
 
     <div class="main-container">
         <div class="auth-container">
-            <h2>Welcome Back</h2>
+            <h2>Create Account</h2>
             <div id="messageContainer"></div>
-            <form id="loginForm" class="auth-form">
+            <form id="registerForm" class="auth-form">
                 <div class="input-group">
+                    <input type="text" class="input-field" id="fullName" placeholder="Full Name" required>
                     <input type="email" class="input-field" id="email" placeholder="Email" required>
                     <input type="password" class="input-field" id="password" placeholder="Password" required>
-                    <button type="submit" class="btn-primary">Login</button>
+                    <input type="password" class="input-field" id="confirmPassword" placeholder="Confirm Password" required>
+                    <button type="submit" class="btn-primary">Create Account</button>
                 </div>
                 <div class="auth-footer">
-                    <p>Don't have an account? <a href="register.html" class="login-link">Sign Up</a></p>
+                    <p>Already have an account? <a href="seatech1.html" class="login-link">Login</a></p>
                 </div>
             </form>
         </div>
     </div>
 
-    <script src="js/login.js"></script>
+    <script src="js/register.js"></script>
 </body>
 </html>

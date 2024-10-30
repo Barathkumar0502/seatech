@@ -11,6 +11,12 @@
     <link rel="icon" type="image/x-icon" href="https://api.dicebear.com/6.x/identicon/svg?seed=SeaTech">
 </head>
 <body>
+    <script>
+        if (localStorage.getItem('isAuthenticated') !== 'true') {
+            window.location.href = 'seatech1.html';
+        }
+    </script>
+
     <div class="dashboard-container">
         <!-- Sidebar -->
         <aside class="sidebar">
