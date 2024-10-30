@@ -11,6 +11,11 @@ const themeToggle = document.getElementById('themeToggle');
 const clearButton = document.querySelector('.tool-btn[title="Clear Chat"]');
 const quickActionButtons = document.querySelectorAll('.action-btn');
 
+// Add these after existing DOM elements
+const uploadButton = document.querySelector('.tool-btn[title="Upload Image"]');
+const voiceButton = document.querySelector('.tool-btn[title="Record Voice"]');
+const attachButton = document.querySelector('.tool-btn[title="Attach File"]');
+
 // Chat History
 let chatHistory = [{
     role: 'model',
@@ -32,6 +37,15 @@ chatForm.addEventListener('submit', handleSubmit);
 clearButton.addEventListener('click', clearChat);
 themeToggle.addEventListener('click', toggleTheme);
 quickActionButtons.forEach(btn => btn.addEventListener('click', handleQuickAction));
+
+// Add this after your existing event listeners (around line 39):
+
+userInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        handleSubmit(e);
+    }
+});
 
 // Handle Form Submit
 async function handleSubmit(e) {
@@ -196,10 +210,14 @@ function clearChat() {
 }
 
 function toggleTheme() {
-    document.body.classList.toggle('light-theme');
+    document.body.classList.toggle('dark-theme');
     const icon = themeToggle.querySelector('i');
     icon.classList.toggle('fa-moon');
     icon.classList.toggle('fa-sun');
+    
+    // Save theme preference
+    const isDark = document.body.classList.contains('dark-theme');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
 }
 
 function saveChatHistory() {
@@ -226,22 +244,129 @@ if (fileInput) {
 }
 
 // Handle voice recording
-const voiceButton = document.querySelector('.tool-btn[title="Record Voice"]');
 if (voiceButton) {
     voiceButton.addEventListener('click', () => {
         alert('Voice recording feature coming soon!');
     });
 }
 
-// Add to existing chat.js
-const themeToggle = document.getElementById('themeToggle');
-const body = document.body;
+// File Upload Handler
+uploadButton.addEventListener('click', () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = handleImageUpload;
+    input.click();
+});
 
-themeToggle.addEventListener('click', () => {
-    body.classList.toggle('dark-theme');
-    const isDark = body.classList.contains('dark-theme');
-    themeToggle.innerHTML = isDark ? 
-        '<i class="fas fa-sun"></i>' : 
-        '<i class="fas fa-moon"></i>';
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+async function handleImageUpload(event) {
+    const file = event.target.files[0];
+    if (file) {
+        try {
+            const message = `[Uploading image: ${file.name}]`;
+            addMessageToChat('user', message);
+            // Here you would typically upload to a server
+            // For now, we'll just show a local preview
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const imgPreview = `<img src="${e.target.result}" style="max-width: 300px; border-radius: 8px;">`;
+                addMessageToChat('user', imgPreview);
+            };
+            reader.readAsDataURL(file);
+        } catch (error) {
+            console.error('Upload error:', error);
+            addMessageToChat('assistant', 'Sorry, there was an error uploading your image.');
+        }
+    }
+};
+
+// Voice Recording Handler
+let mediaRecorder;
+let audioChunks = [];
+
+voiceButton.addEventListener('click', async () => {
+    try {
+        if (!mediaRecorder || mediaRecorder.state === 'inactive') {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorder = new MediaRecorder(stream);
+            audioChunks = [];
+            
+            mediaRecorder.ondataavailable = (event) => {
+                audioChunks.push(event.data);
+            };
+
+            mediaRecorder.onstop = () => {
+                const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                const audioUrl = URL.createObjectURL(audioBlob);
+                const audio = `<audio controls src="${audioUrl}"></audio>`;
+                addMessageToChat('user', audio);
+            };
+
+            mediaRecorder.start();
+            voiceButton.innerHTML = '<i class="fas fa-stop"></i>';
+            addMessageToChat('assistant', 'Recording started... Click again to stop.');
+        } else {
+            mediaRecorder.stop();
+            voiceButton.innerHTML = '<i class="fas fa-microphone"></i>';
+            addMessageToChat('assistant', 'Recording stopped.');
+        }
+    } catch (error) {
+        console.error('Recording error:', error);
+        addMessageToChat('assistant', 'Sorry, there was an error with the voice recording.');
+    }
+});
+
+// File Attachment Handler
+attachButton.addEventListener('click', () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.onchange = handleFileAttachment;
+    input.click();
+});
+
+function handleFileAttachment(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const message = `[Attached file: ${file.name}]`;
+        addMessageToChat('user', message);
+        // Here you would typically upload to a server
+        addMessageToChat('assistant', 'File received! I can help you analyze its contents.');
+    }
+};
+
+// Enhanced Quick Action Buttons
+quickActionButtons.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        const action = e.currentTarget.textContent.trim();
+        let message = '';
+        
+        switch(action) {
+            case 'Study Help':
+                window.location.href = 'study-help.html';
+                break;
+            case 'Q&A Support':
+                message = "I have a question about my current topic of study.";
+                break;
+            case 'Assignment Help':
+                message = "I need guidance with my assignment.";
+                break;
+            case 'Concept Explanation':
+                message = "Can you explain a complex concept to me?";
+                break;
+        }
+
+        if (message) {
+            userInput.value = message;
+            chatForm.dispatchEvent(new Event('submit'));
+        }
+    });
+});
+
+// Load saved theme
+document.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-theme');
+        themeToggle.querySelector('i').classList.replace('fa-moon', 'fa-sun');
+    }
 });

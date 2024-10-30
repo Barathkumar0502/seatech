@@ -405,3 +405,38 @@ body {
         max-width: 85%;
     }
 }
+
+/* Add to existing styles */
+.recording {
+    animation: pulse 1s infinite;
+    background: var(--danger) !important;
+}
+
+.file-preview {
+    max-width: 300px;
+    border-radius: 8px;
+    margin: 10px 0;
+}
+
+.audio-message {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.file-message {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.file-icon {
+    font-size: 24px;
+    color: var(--primary-color);
+}

@@ -1,5 +1,5 @@
 const CONFIG = {
-    GEMINI_API_KEY: 'YOUR_GEMINI_API_KEY',
+    GEMINI_API_KEY: 'AIzaSyDacU81vR9EFPTuIuSl7OqNTlw6btYTMZY',
     API_ENDPOINT: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent',
     AVATAR_API: 'https://api.dicebear.com/6.x/avataaars/svg',
     CONTRIBUTION_COLORS: [
