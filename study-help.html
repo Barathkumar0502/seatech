@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Plan Generator - SeaTech</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="study-help.css">
+    <link rel="icon" type="image/x-icon" href="https://api.dicebear.com/6.x/identicon/svg?seed=SeaTech">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="https://api.dicebear.com/6.x/identicon/svg?seed=SeaTech" alt="SeaTech Logo" class="logo-img">
+                <h2>SeaTech</h2>
+            </div>
+            
+            <div class="user-profile">
+                <img src="https://api.dicebear.com/6.x/avataaars/svg?seed=Student" alt="Profile" class="avatar">
+                <div class="user-info">
+                    <h3>John Doe</h3>
+                    <span>Computer Science</span>
+                </div>
+            </div>
+
+            <nav class="nav-menu">
+                <a href="dashboard.html"><i class="fas fa-th-large"></i> Overview</a>
+                <a href="chat.html"><i class="fas fa-robot"></i> AI Tutor</a>
+                <a href="#" class="active"><i class="fas fa-book"></i> Study Plan</a>
+                <a href="#"><i class="fas fa-brain"></i> Learning Style</a>
+                <a href="#"><i class="fas fa-chart-line"></i> Progress</a>
+                <a href="#"><i class="fas fa-heart"></i> Wellness</a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search for topics...">
+                </div>
+                <div class="header-tools">
+                    <button class="tool-btn"><i class="fas fa-bell"></i></button>
+                    <button class="tool-btn"><i class="fas fa-cog"></i></button>
+                </div>
+            </header>
+
+            <!-- Study Plan Generator Section -->
+            <div class="content-wrapper">
+                <section class="study-plan-section">
+                    <div class="study-plan-container">
+                        <div class="form-header">
+                            <h2>Create Your Study Plan</h2>
+                            <p class="form-description">
+                                Generate a personalized study plan tailored to your goals and schedule
+                            </p>
+                        </div>
+
+                        <form id="studyPlanForm">
+                            <div class="input-container">
+                                <div class="form-group">
+                                    <label for="subject">Subject/Topic</label>
+                                    <input type="text" 
+                                           id="subject" 
+                                           required 
+                                           placeholder="e.g., Data Structures, Machine Learning">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="goal">Study Goal</label>
+                                    <input type="text" 
+                                           id="goal" 
+                                           required 
+                                           placeholder="e.g., Master algorithms, Prepare for certification">
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="hours">Hours per Day</label>
+                                        <input type="number" 
+                                               id="hours" 
+                                               required 
+                                               min="1" 
+                                               max="24" 
+                                               placeholder="4">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="days">Number of Days</label>
+                                        <input type="number" 
+                                               id="days" 
+                                               required 
+                                               min="1" 
+                                               max="90" 
+                                               placeholder="30">
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="submit-btn">
+                                    <i class="fas fa-calendar-plus"></i>
+                                    Generate Study Plan
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+
+                <div id="planResult" class="plan-result">
+                    <!-- Study plan will be generated here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="study-help.js"></script>
+</body>
+</html> 

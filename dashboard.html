@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - SeaTech</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="icon" type="image/x-icon" href="https://api.dicebear.com/6.x/identicon/svg?seed=SeaTech">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="https://api.dicebear.com/6.x/identicon/svg?seed=SeaTech" alt="SeaTech Logo" class="logo-img">
+                <h2>SeaTech</h2>
+            </div>
+            
+            <div class="user-profile">
+                <img src="https://api.dicebear.com/6.x/avataaars/svg?seed=Student" alt="Profile" class="avatar">
+                <div class="user-info">
+                    <h3>John Doe</h3>
+                    <span>Computer Science</span>
+                </div>
+            </div>
+
+            <nav class="nav-menu">
+                <a href="#" class="active"><i class="fas fa-th-large"></i> Overview</a>
+                <a href="chat.html"><i class="fas fa-robot"></i> AI Tutor</a>
+                <a href="#"><i class="fas fa-book"></i> Courses</a>
+                <a href="#"><i class="fas fa-brain"></i> Learning Style</a>
+                <a href="#"><i class="fas fa-chart-line"></i> Progress</a>
+                <a href="#"><i class="fas fa-heart"></i> Wellness</a>
+            </nav>
+
+            <!-- Mood Tracker -->
+            <div class="mood-tracker">
+                <h3>Daily Mood Check</h3>
+                <div class="mood-buttons">
+                    <button class="mood-btn" data-mood="great">😊</button>
+                    <button class="mood-btn" data-mood="good">🙂</button>
+                    <button class="mood-btn" data-mood="okay">😐</button>
+                    <button class="mood-btn" data-mood="stressed">😟</button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search for courses, topics...">
+                </div>
+                <div class="header-tools">
+                    <button class="tool-btn"><i class="fas fa-bell"></i></button>
+                    <button class="tool-btn"><i class="fas fa-cog"></i></button>
+                </div>
+            </header>
+
+            <!-- Dashboard Grid -->
+            <div class="dashboard-grid">
+                <!-- Quick Stats -->
+                <div class="card stats-card">
+                    <h3>Learning Progress</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-value">85%</div>
+                            <div class="stat-label">Course Progress</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">24</div>
+                            <div class="stat-label">Study Hours</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">92%</div>
+                            <div class="stat-label">Quiz Score</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">15</div>
+                            <div class="stat-label">AI Sessions</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Learning Style Analysis -->
+                <div class="card style-card">
+                    <h3>Your Learning Style</h3>
+                    <div class="learning-stats">
+                        <div class="stat-row">
+                            <span>Visual Learning</span>
+                            <div class="progress-bar">
+                                <div class="progress" style="width: 75%"></div>
+                            </div>
+                            <span>75%</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Auditory Learning</span>
+                            <div class="progress-bar">
+                                <div class="progress" style="width: 60%"></div>
+                            </div>
+                            <span>60%</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Kinesthetic Learning</span>
+                            <div class="progress-bar">
+                                <div class="progress" style="width: 45%"></div>
+                            </div>
+                            <span>45%</span>
+                        </div>
+                    </div>
+                    <button class="view-details-btn">View Detailed Analysis</button>
+                </div>
+
+                <!-- Activity Graph -->
+                <div class="card graph-card">
+                    <h3>Learning Activity</h3>
+                    <div class="graph-header">
+                        <span class="total-contributions">248 learning activities in the last year</span>
+                        <div class="graph-key">
+                            <span>Less</span>
+                            <ul class="contribution-grades">
+                                <li data-level="0"></li>
+                                <li data-level="1"></li>
+                                <li data-level="2"></li>
+                                <li data-level="3"></li>
+                                <li data-level="4"></li>
+                            </ul>
+                            <span>More</span>
+                        </div>
+                    </div>
+                    <div class="contribution-graph" id="contributionGraph">
+                        <!-- Graph will be generated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Recent AI Sessions -->
+                <div class="card sessions-card">
+                    <h3>Recent AI Tutor Sessions</h3>
+                    <div class="sessions-list">
+                        <div class="session-item">
+                            <div class="session-icon">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="session-info">
+                                <h4>Machine Learning Basics</h4>
+                                <p>30 min session • Today</p>
+                            </div>
+                            <button class="resume-btn">Resume</button>
+                        </div>
+                        <div class="session-item">
+                            <div class="session-icon">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="session-info">
+                                <h4>Database Design</h4>
+                                <p>45 min session • Yesterday</p>
+                            </div>
+                            <button class="resume-btn">Resume</button>
+                        </div>
+                        <div class="session-item">
+                            <div class="session-icon">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="session-info">
+                                <h4>Python Programming</h4>
+                                <p>60 min session • 2 days ago</p>
+                            </div>
+                            <button class="resume-btn">Resume</button>
+                        </div>
+                    </div>
+                    <a href="chat.html" class="new-session-btn">Start New Session</a>
+                </div>
+
+                <!-- Login Activity -->
+                <div class="card activity-card">
+                    <h3>Login Activity</h3>
+                    <div class="login-activity">
+                        <div class="current-login">
+                            <i class="fas fa-circle active-indicator"></i>
+                            <div class="login-info">
+                                <h4>Current Session</h4>
+                                <p>Windows • Chrome • Mumbai, India</p>
+                                <span class="login-time">Active now</span>
+                            </div>
+                        </div>
+                        <div class="login-history">
+                            <h4>Recent Activity</h4>
+                            <div class="login-item">
+                                <i class="fas fa-desktop"></i>
+                                <div class="login-details">
+                                    <p>Windows • Firefox</p>
+                                    <span>Yesterday at 3:45 PM • Mumbai, India</span>
+                                </div>
+                            </div>
+                            <div class="login-item">
+                                <i class="fas fa-mobile-alt"></i>
+                                <div class="login-details">
+                                    <p>iPhone • Safari</p>
+                                    <span>2 days ago at 7:30 PM • Mumbai, India</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html> 
