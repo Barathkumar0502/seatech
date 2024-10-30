@@ -1,16 +1,30 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize mood buttons
     const moodButtons = document.querySelectorAll('.mood-btn');
-    const contributionCells = document.querySelectorAll('.contribution-cell');
+    const resumeButtons = document.querySelectorAll('.resume-btn');
+    const logoutBtn = document.getElementById('logoutBtn');
     
     moodButtons.forEach(btn => {
         btn.addEventListener('click', () => {
-            // Remove active class from all buttons
             moodButtons.forEach(b => b.classList.remove('active'));
-            // Add active class to clicked button
             btn.classList.add('active');
-            // Save mood
             saveMood(btn.dataset.mood);
         });
+    });
+
+    // Initialize resume buttons
+    resumeButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.location.href = 'chat.html';
+        });
+    });
+
+    // Initialize logout
+    logoutBtn?.addEventListener('click', () => {
+        localStorage.removeItem('isAuthenticated');
+        localStorage.removeItem('userEmail');
+        window.location.href = 'seatech1.html';
     });
 
     function saveMood(mood) {
@@ -19,5 +33,13 @@ document.addEventListener('DOMContentLoaded', () => {
         moods[today] = mood;
         localStorage.setItem('moods', JSON.stringify(moods));
         showMessage('Mood updated!', 'success');
+    }
+
+    function showMessage(message, type) {
+        const toast = document.createElement('div');
+        toast.className = `message ${type}-message`;
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
     }
 }); 

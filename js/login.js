@@ -40,13 +40,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function showMessage(message, type) {
+        const messageContainer = document.getElementById('messageContainer');
         messageContainer.innerHTML = `<div class="${type}-message">${message}</div>`;
+        setTimeout(() => {
+            messageContainer.innerHTML = '';
+        }, 3000);
     }
 
     async function authenticateUser(email, password) {
+        // Simulate API delay
         await new Promise(resolve => setTimeout(resolve, 1000));
 
-        // Check demo user first
+        // Check demo users
         const demoUser = DEMO_USERS.find(u => u.email === email && u.password === password);
         if (demoUser) return demoUser;
 

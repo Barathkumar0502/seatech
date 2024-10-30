@@ -12,45 +12,26 @@ async function generateStudyPlan() {
         return;
     }
 
-    const generateBtn = document.getElementById('generatePlan');
-    const planResult = document.getElementById('planResult');
+    const generateBtn = document.querySelector('.submit-btn');
     generateBtn.disabled = true;
-    planResult.innerHTML = '<div class="loading">Generating your personalized study plan...</div>';
 
     try {
-        const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=AIzaSyB0Vs5cr8z2caW37eAFPvDgOXgmLDYE2KM', {
+        const prompt = `Create a detailed ${days}-day study plan for ${subject}. 
+            Goal: ${goal}. Daily study time: ${hours} hours.
+            Include daily schedule, topics breakdown, and milestones.`;
+
+        const response = await fetch(API_ENDPOINT, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${GEMINI_API_KEY}`
             },
             body: JSON.stringify({
                 contents: [{
                     parts: [{
-                        text: `Create a detailed ${days}-day study plan for ${subject}.
-                               Goal: ${goal}
-                               Available time: ${hours} hours per day
-
-                               Please provide:
-                               # Overview
-                               Brief introduction and main objectives
-
-                               # Daily Schedule
-                               Detailed breakdown for each day
-
-                               # Resources
-                               Required materials and tools
-
-                               # Practice
-                               Exercises and assessments
-
-                               # Tips
-                               Study strategies and recommendations`
+                        text: prompt
                     }]
-                }],
-                generationConfig: {
-                    temperature: 0.7,
-                    maxOutputTokens: 2048,
-                }
+                }]
             })
         });
 
@@ -182,47 +163,21 @@ function showMessage(message, type = 'info') {
 }
 
 // Event listeners
-document.getElementById('generatePlan').addEventListener('click', generateStudyPlan);
-
-// Handle form submission
-document.getElementById('studyPlanForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    generateStudyPlan();
-});
-
 document.addEventListener('DOMContentLoaded', () => {
-    const planForm = document.getElementById('planForm');
-    const planResult = document.getElementById('planResult');
+    const generateBtn = document.getElementById('generatePlan');
+    const studyPlanForm = document.getElementById('studyPlanForm');
 
-    planForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        const subject = document.getElementById('subject').value;
-        const goal = document.getElementById('goal').value;
-        const hours = document.getElementById('hours').value;
-        const days = document.getElementById('days').value;
+    if (generateBtn) {
+        generateBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            generateStudyPlan();
+        });
+    }
 
-        try {
-            const plan = await generatePlan(subject, goal, hours, days);
-            displayPlan(plan);
-        } catch (error) {
-            showMessage(error.message, 'error');
-        }
-    });
-
-    async function generatePlan(subject, goal, hours, days) {
-        // Simulate API call - replace with actual AI integration
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        
-        return `
-# Day 1-${days} Study Plan for ${subject}
-- Goal: ${goal}
-- Daily commitment: ${hours} hours
-
-## Daily Schedule
-1. Review previous material (${Math.floor(hours * 0.2)} hours)
-2. New content (${Math.floor(hours * 0.5)} hours)
-3. Practice problems (${Math.floor(hours * 0.3)} hours)
-        `;
+    if (studyPlanForm) {
+        studyPlanForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            generateStudyPlan();
+        });
     }
 });

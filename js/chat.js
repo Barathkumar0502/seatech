@@ -4,7 +4,7 @@ const { GEMINI_API_KEY, API_ENDPOINT, AVATAR_API } = CONFIG;
 // DOM Elements
 const chatForm = document.getElementById('chatForm');
 const userInput = document.getElementById('userInput');
-const chatMessages = document.getElementById('chatMessages');
+const chatMessages = document.getElementById('chat-messages');
 const loadingIndicator = document.getElementById('loadingIndicator');
 const subjectSelect = document.getElementById('subjectSelect');
 const themeToggle = document.getElementById('themeToggle');
@@ -22,14 +22,12 @@ let chatHistory = [{
     parts: [{ text: 'You are a helpful AI learning assistant. You help students understand concepts, solve problems, and learn effectively.' }]
 }];
 
-// Initialize
+// Initialize event listeners
 document.addEventListener('DOMContentLoaded', () => {
-    const savedHistory = localStorage.getItem('chatHistory');
-    if (savedHistory) {
-        chatHistory = JSON.parse(savedHistory);
-        renderChatHistory();
-    }
-    userInput.addEventListener('input', autoResizeTextarea);
+    chatForm?.addEventListener('submit', handleSubmit);
+    clearButton?.addEventListener('click', clearChat);
+    themeToggle?.addEventListener('click', toggleTheme);
+    quickActionButtons?.forEach(btn => btn.addEventListener('click', handleQuickAction));
 });
 
 // Event Listeners
@@ -60,8 +58,24 @@ async function handleSubmit(e) {
     loadingIndicator.style.display = 'block';
 
     try {
-        const response = await sendMessageToAPI(message);
-        addMessageToChat('assistant', response);
+        const response = await fetch(API_ENDPOINT, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${GEMINI_API_KEY}`
+            },
+            body: JSON.stringify({
+                contents: [{
+                    parts: [{
+                        text: message
+                    }]
+                }]
+            })
+        });
+
+        const data = await response.json();
+        const aiResponse = data.candidates[0].content.parts[0].text;
+        addMessageToChat('assistant', aiResponse);
     } catch (error) {
         console.error('Error:', error);
         addMessageToChat('assistant', 'Sorry, I encountered an error. Please try again.');
