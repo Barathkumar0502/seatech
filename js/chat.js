@@ -231,4 +231,17 @@ if (voiceButton) {
     voiceButton.addEventListener('click', () => {
         alert('Voice recording feature coming soon!');
     });
-} 
+}
+
+// Add to existing chat.js
+const themeToggle = document.getElementById('themeToggle');
+const body = document.body;
+
+themeToggle.addEventListener('click', () => {
+    body.classList.toggle('dark-theme');
+    const isDark = body.classList.contains('dark-theme');
+    themeToggle.innerHTML = isDark ? 
+        '<i class="fas fa-sun"></i>' : 
+        '<i class="fas fa-moon"></i>';
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+});

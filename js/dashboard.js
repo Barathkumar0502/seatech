@@ -1,30 +1,23 @@
-// Generate Contribution Graph
-function generateContributionGraph() {
-    const graph = document.getElementById('contributionGraph');
-    const days = 52 * 7; // One year
-    const today = new Date();
+document.addEventListener('DOMContentLoaded', () => {
+    const moodButtons = document.querySelectorAll('.mood-btn');
+    const contributionCells = document.querySelectorAll('.contribution-cell');
+    
+    moodButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Remove active class from all buttons
+            moodButtons.forEach(b => b.classList.remove('active'));
+            // Add active class to clicked button
+            btn.classList.add('active');
+            // Save mood
+            saveMood(btn.dataset.mood);
+        });
+    });
 
-    for (let i = 0; i < days; i++) {
-        const cell = document.createElement('div');
-        cell.className = 'contribution-cell';
-        
-        // Generate random activity level for demo
-        const level = Math.floor(Math.random() * 5);
-        cell.style.background = `rgba(255, 0, 128, ${level * 0.2})`;
-        
-        // Calculate date for this cell
-        const date = new Date(today);
-        date.setDate(date.getDate() - (days - i));
-        
-        // Add tooltip
-        cell.title = `${level} activities on ${date.toLocaleDateString()}`;
-        
-        graph.appendChild(cell);
+    function saveMood(mood) {
+        const today = new Date().toISOString().split('T')[0];
+        const moods = JSON.parse(localStorage.getItem('moods') || '{}');
+        moods[today] = mood;
+        localStorage.setItem('moods', JSON.stringify(moods));
+        showMessage('Mood updated!', 'success');
     }
-}
-
-// Call when document loads
-document.addEventListener('DOMContentLoaded', function() {
-    generateContributionGraph();
-    // ... existing code ...
 }); 

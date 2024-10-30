@@ -156,3 +156,29 @@ body {
     margin-bottom: 1rem;
     text-align: center;
 }
+
+/* Add to existing styles.css */
+.logout-btn {
+    color: #ff4444;
+    margin-top: auto;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+    background: rgba(255, 68, 68, 0.1);
+}
+
+.mood-btn.active {
+    transform: scale(1.2);
+    box-shadow: 0 0 15px rgba(255, 0, 128, 0.3);
+}
+
+.dark-theme {
+    --bg-dark: #000000;
+    --bg-light: #1a1a1a;
+}

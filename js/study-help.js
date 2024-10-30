@@ -189,3 +189,40 @@ document.getElementById('studyPlanForm').addEventListener('submit', (e) => {
     e.preventDefault();
     generateStudyPlan();
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const planForm = document.getElementById('planForm');
+    const planResult = document.getElementById('planResult');
+
+    planForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const subject = document.getElementById('subject').value;
+        const goal = document.getElementById('goal').value;
+        const hours = document.getElementById('hours').value;
+        const days = document.getElementById('days').value;
+
+        try {
+            const plan = await generatePlan(subject, goal, hours, days);
+            displayPlan(plan);
+        } catch (error) {
+            showMessage(error.message, 'error');
+        }
+    });
+
+    async function generatePlan(subject, goal, hours, days) {
+        // Simulate API call - replace with actual AI integration
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        return `
+# Day 1-${days} Study Plan for ${subject}
+- Goal: ${goal}
+- Daily commitment: ${hours} hours
+
+## Daily Schedule
+1. Review previous material (${Math.floor(hours * 0.2)} hours)
+2. New content (${Math.floor(hours * 0.5)} hours)
+3. Practice problems (${Math.floor(hours * 0.3)} hours)
+        `;
+    }
+});
