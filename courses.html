@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Courses - SeaTech</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/courses.css">
+    <link rel="icon" type="image/x-icon" href="https://api.dicebear.com/6.x/identicon/svg?seed=SeaTech">
+</head>
+<body>
+    <script>
+        if (localStorage.getItem('isAuthenticated') !== 'true') {
+            window.location.href = 'index.html';
+        }
+    </script>
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="https://api.dicebear.com/6.x/identicon/svg?seed=SeaTech" alt="SeaTech Logo" class="logo-img">
+                <h2>SeaTech</h2>
+            </div>
+            
+            <div class="user-profile">
+                <img src="https://api.dicebear.com/6.x/avataaars/svg?seed=Student" alt="Profile" class="avatar">
+                <div class="user-info">
+                    <h3>John Doe</h3>
+                    <span>Computer Science</span>
+                </div>
+            </div>
+
+            <nav class="nav-menu">
+                <a href="dashboard.html"><i class="fas fa-th-large"></i> Overview</a>
+                <a href="chat.html"><i class="fas fa-robot"></i> AI Tutor</a>
+                <a href="courses.html" class="active"><i class="fas fa-book"></i> Courses</a>
+                <a href="#"><i class="fas fa-brain"></i> Learning Style</a>
+                <a href="#"><i class="fas fa-chart-line"></i> Progress</a>
+                <a href="#"><i class="fas fa-heart"></i> Wellness</a>
+            </nav>
+
+            <button id="logoutBtn" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </button>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="header">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search courses...">
+                </div>
+                <div class="header-tools">
+                    <button class="tool-btn"><i class="fas fa-bell"></i></button>
+                    <button class="tool-btn"><i class="fas fa-cog"></i></button>
+                </div>
+            </header>
+
+            <div class="courses-container">
+                <div class="courses-header">
+                    <h2>My Courses</h2>
+                    <div class="filter-options">
+                        <select class="filter-select">
+                            <option value="all">All Categories</option>
+                            <option value="programming">Programming</option>
+                            <option value="design">Design</option>
+                            <option value="business">Business</option>
+                        </select>
+                        <select class="filter-select">
+                            <option value="all">All Progress</option>
+                            <option value="in-progress">In Progress</option>
+                            <option value="completed">Completed</option>
+                            <option value="not-started">Not Started</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="courses-grid">
+                    <!-- Course Cards -->
+                    <div class="course-card">
+                        <div class="course-image" style="background-image: url('https://source.unsplash.com/random/800x600?programming')">
+                            <span class="course-badge">In Progress</span>
+                        </div>
+                        <div class="course-content">
+                            <h3>Introduction to Python Programming</h3>
+                            <p>Learn the fundamentals of Python programming language</p>
+                            <div class="course-progress">
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: 65%"></div>
+                                </div>
+                                <span>65% Complete</span>
+                            </div>
+                            <div class="course-footer">
+                                <span><i class="fas fa-clock"></i> 12 hours left</span>
+                                <button class="resume-btn">Resume</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Add more course cards with different content -->
+                    <!-- Course 2 -->
+                    <div class="course-card">
+                        <div class="course-image" style="background-image: url('https://source.unsplash.com/random/800x600?webdesign')">
+                            <span class="course-badge completed">Completed</span>
+                        </div>
+                        <div class="course-content">
+                            <h3>Web Design Fundamentals</h3>
+                            <p>Master the basics of web design and UI principles</p>
+                            <div class="course-progress">
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: 100%"></div>
+                                </div>
+                                <span>100% Complete</span>
+                            </div>
+                            <div class="course-footer">
+                                <span><i class="fas fa-trophy"></i> Certificate earned</span>
+                                <button class="review-btn">Review</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Course 3 -->
+                    <div class="course-card">
+                        <div class="course-image" style="background-image: url('https://source.unsplash.com/random/800x600?javascript')">
+                            <span class="course-badge">Not Started</span>
+                        </div>
+                        <div class="course-content">
+                            <h3>Advanced JavaScript</h3>
+                            <p>Deep dive into modern JavaScript development</p>
+                            <div class="course-progress">
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: 0%"></div>
+                                </div>
+                                <span>0% Complete</span>
+                            </div>
+                            <div class="course-footer">
+                                <span><i class="fas fa-book"></i> 20 lessons</span>
+                                <button class="start-btn">Start Now</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/common.js"></script>
+    <script src="js/courses.js"></script>
+</body>
+</html>

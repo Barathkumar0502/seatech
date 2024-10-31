@@ -8,6 +8,12 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+    <script>
+        if (localStorage.getItem('isAuthenticated') !== 'true') {
+            window.location.href = 'index.html';
+        }
+    </script>
+
     <div class="video-background">
         <video autoplay muted loop playsinline id="myVideo">
             <source src="join us.mp4" type="video/mp4">

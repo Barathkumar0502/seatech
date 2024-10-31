@@ -2,9 +2,44 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('loginForm');
     const messageContainer = document.getElementById('messageContainer');
 
-    // Demo credentials (replace with actual authentication)
+    // Demo credentials and course data
     const DEMO_USERS = [
-        { email: 'demo@seatech.com', password: 'demo123' }
+        { 
+            email: 'demo@seatech.com', 
+            password: 'demo123',
+            courses: [
+                {
+                    id: 1,
+                    title: 'Introduction to Python Programming',
+                    description: 'Learn the fundamentals of Python programming language',
+                    progress: 65,
+                    category: 'programming',
+                    status: 'in-progress',
+                    timeLeft: '12 hours',
+                    image: 'https://source.unsplash.com/random/800x600?programming'
+                },
+                {
+                    id: 2,
+                    title: 'Web Design Fundamentals',
+                    description: 'Master the basics of web design and UI principles',
+                    progress: 100,
+                    category: 'design',
+                    status: 'completed',
+                    timeLeft: '0 hours',
+                    image: 'https://source.unsplash.com/random/800x600?webdesign'
+                },
+                {
+                    id: 3,
+                    title: 'Advanced JavaScript',
+                    description: 'Deep dive into modern JavaScript development',
+                    progress: 0,
+                    category: 'programming',
+                    status: 'not-started',
+                    timeLeft: '20 hours',
+                    image: 'https://source.unsplash.com/random/800x600?javascript'
+                }
+            ]
+        }
     ];
 
     loginForm.addEventListener('submit', async (e) => {
@@ -13,23 +48,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const email = document.getElementById('email').value;
         const password = document.getElementById('password').value;
 
-        // Basic validation
-        if (!email || !password) {
-            showMessage('Please fill in all fields', 'error');
-            return;
-        }
-
         try {
-            // Simulate API call
-            await authenticateUser(email, password);
+            const user = DEMO_USERS.find(u => u.email === email && u.password === password);
             
-            showMessage('Login successful! Redirecting...', 'success');
+            if (!user) {
+                throw new Error('Invalid credentials');
+            }
             
-            // Store auth state
+            // Store auth state and user data
             localStorage.setItem('isAuthenticated', 'true');
             localStorage.setItem('userEmail', email);
+            localStorage.setItem('userCourses', JSON.stringify(user.courses));
 
-            // Redirect after short delay
+            showMessage('Login successful! Redirecting...', 'success');
+            
             setTimeout(() => {
                 window.location.href = 'dashboard.html';
             }, 1500);
