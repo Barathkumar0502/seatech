@@ -20,18 +20,16 @@ async function generateStudyPlan() {
             Goal: ${goal}. Daily study time: ${hours} hours.
             Include daily schedule, topics breakdown, and milestones.`;
 
-        const response = await fetch(API_ENDPOINT, {
+        const response = await fetch(CONFIG.API_ENDPOINT + '/study-plan', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${GEMINI_API_KEY}`
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                contents: [{
-                    parts: [{
-                        text: prompt
-                    }]
-                }]
+                subject: subject,
+                goal: goal,
+                hours: hours,
+                days: days
             })
         });
 

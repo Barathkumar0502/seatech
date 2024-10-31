@@ -61,16 +61,36 @@ async function handleSubmit(e) {
 async function sendMessageToAPI(message) {
     const subject = subjectSelect.value;
     
+    // Format messages for Gemini API
+    const formattedMessages = chatHistory.map(msg => ({
+        role: msg.role === 'user' ? 'user' : 'model',
+        parts: [{ text: msg.parts[0].text }]
+    }));
+
+    // Add current message
+    formattedMessages.push({
+        role: 'user',
+        parts: [{ text: message }]
+    });
+
+    // Add subject context
+    formattedMessages.push({
+        role: 'model',
+        parts: [{ text: `I'll help you with ${subject} related questions.` }]
+    });
+
     try {
-        const response = await fetch('YOUR_BACKEND_ENDPOINT', {
+        const response = await fetch(`${API_ENDPOINT}?key=${GEMINI_API_KEY}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                messages: chatHistory,
-                subject: subject,
-                message: message
+                contents: formattedMessages,
+                generationConfig: {
+                    temperature: 0.7,
+                    maxOutputTokens: 1000,
+                }
             })
         });
 
@@ -79,7 +99,7 @@ async function sendMessageToAPI(message) {
         }
 
         const data = await response.json();
-        const reply = data.response; // Adjust based on your API response structure
+        const reply = data.candidates[0].content.parts[0].text;
 
         // Update chat history
         chatHistory.push({ 
@@ -198,12 +218,28 @@ function renderChatHistory() {
 }
 
 // Handle file uploads
-const fileInput = document.querySelector('.tool-btn[title="Upload Image"]');
-if (fileInput) {
-    fileInput.addEventListener('click', () => {
-        alert('File upload feature coming soon!');
+const fileInput = document.createElement('input');
+fileInput.type = 'file';
+fileInput.accept = 'image/*';
+fileInput.style.display = 'none';
+document.body.appendChild(fileInput);
+
+const uploadButton = document.querySelector('.tool-btn[title="Upload Image"]');
+if (uploadButton) {
+    uploadButton.addEventListener('click', () => {
+        fileInput.click();
     });
 }
+
+fileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        // TODO: Handle file upload
+        console.log('File selected:', file);
+        // For now, just show the filename in the chat
+        addMessageToChat('user', `Uploaded file: ${file.name}`);
+    }
+});
 
 // Handle voice recording
 const voiceButton = document.querySelector('.tool-btn[title="Record Voice"]');
