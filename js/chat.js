@@ -123,28 +123,39 @@ async function sendMessageToAPI(message) {
 // Add Message to Chat
 function addMessageToChat(role, content) {
     const messageDiv = document.createElement('div');
-    messageDiv.className = `message ${role}-message`;
+    messageDiv.className = `message ${role}-message animate-in`;
     
     const avatar = role === 'user' 
         ? `${AVATAR_API}?seed=Student`
         : `${AVATAR_API}?seed=AI`;
+
+    // Parse markdown and add syntax highlighting
+    const formattedContent = marked.parse(content, {
+        highlight: function(code, lang) {
+            if (lang && hljs.getLanguage(lang)) {
+                return hljs.highlight(code, { language: lang }).value;
+            }
+            return code;
+        }
+    });
 
     messageDiv.innerHTML = `
         <div class="message-avatar">
             <img src="${avatar}" alt="${role}">
         </div>
         <div class="message-content">
-            <div class="message-text">${content}</div>
-            <div class="message-time">${getCurrentTime()}</div>
+            <div class="message-bubble">
+                <div class="message-text">${formattedContent}</div>
+                <div class="message-metadata">
+                    <span class="message-time">${getCurrentTime()}</span>
+                    ${role === 'assistant' ? '<span class="ai-badge">AI</span>' : ''}
+                </div>
+            </div>
         </div>
     `;
 
-    const welcomeMessage = document.querySelector('.welcome-message');
-    if (welcomeMessage) {
-        welcomeMessage.remove();
-    }
-
     chatMessages.appendChild(messageDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
 // Quick Action Handler
