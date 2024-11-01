@@ -5,15 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - SeaTech</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <script>
-        if (localStorage.getItem('isAuthenticated') !== 'true') {
-            window.location.href = 'index.html';
-        }
-    </script>
-
     <div class="video-background">
         <video autoplay muted loop playsinline id="myVideo">
             <source src="join us.mp4" type="video/mp4">
@@ -26,9 +21,19 @@
             <div id="messageContainer"></div>
             <form id="loginForm" class="auth-form">
                 <div class="input-group">
-                    <input type="email" class="input-field" id="email" placeholder="Email" required>
-                    <input type="password" class="input-field" id="password" placeholder="Password" required>
-                    <button type="submit" class="btn-primary">Login</button>
+                    <div class="input-wrapper">
+                        <input type="email" class="input-field" id="email" placeholder="Email" required>
+                        <i class="fas fa-envelope input-icon"></i>
+                    </div>
+                    <div class="input-wrapper">
+                        <input type="password" class="input-field" id="password" placeholder="Password" required>
+                        <i class="fas fa-lock input-icon"></i>
+                        <i class="fas fa-eye-slash toggle-password" id="togglePassword"></i>
+                    </div>
+                    <button type="submit" class="btn-primary" id="loginButton">
+                        <span>Login</span>
+                        <div class="spinner"></div>
+                    </button>
                 </div>
                 <div class="auth-footer">
                     <p>Don't have an account? <a href="register.html" class="login-link">Sign Up</a></p>
@@ -37,7 +42,8 @@
         </div>
     </div>
 
-    <script src="js/login.js"></script>
     <script src="js/config.js"></script>
+    <script src="js/login.js"></script>
+    <script src="js/common.js"></script>
 </body>
 </html>

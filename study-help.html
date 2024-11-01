@@ -12,7 +12,8 @@
 </head>
 <body>
     <script>
-        if (localStorage.getItem('isAuthenticated') !== 'true') {
+        const session = JSON.parse(localStorage.getItem('session'));
+        if (!session || !session.isAuthenticated) {
             window.location.href = 'index.html';
         }
     </script>
@@ -129,5 +130,6 @@
 
     <script src="config.js"></script>
     <script src="study-help.js"></script>
+    <script src="js/common.js"></script>
 </body>
 </html> 

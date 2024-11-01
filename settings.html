@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - SeaTech</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/settings.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="https://api.dicebear.com/6.x/identicon/svg?seed=SeaTech" alt="SeaTech Logo" class="logo-img">
+                <h2>SeaTech</h2>
+            </div>
+            
+            <div class="user-profile">
+                <img src="" alt="Profile" class="avatar" id="userAvatar">
+                <div class="user-info">
+                    <h3 id="userName"></h3>
+                    <span id="userField"></span>
+                </div>
+            </div>
+
+            <nav class="nav-menu">
+                <a href="dashboard.html"><i class="fas fa-th-large"></i> Overview</a>
+                <a href="chat.html"><i class="fas fa-robot"></i> AI Tutor</a>
+                <a href="courses.html"><i class="fas fa-book"></i> Courses</a>
+                <a href="#"><i class="fas fa-brain"></i> Learning Style</a>
+                <a href="#"><i class="fas fa-chart-line"></i> Progress</a>
+                <a href="#"><i class="fas fa-heart"></i> Wellness</a>
+            </nav>
+
+            <button id="logoutBtn" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </button>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="content-wrapper">
+                <div class="card">
+                    <div class="settings-nav">
+                        <button class="settings-tab active" data-tab="profile">
+                            <i class="fas fa-user"></i> Profile
+                        </button>
+                        <button class="settings-tab" data-tab="account">
+                            <i class="fas fa-shield-alt"></i> Account
+                        </button>
+                        <button class="settings-tab" data-tab="appearance">
+                            <i class="fas fa-paint-brush"></i> Appearance
+                        </button>
+                    </div>
+
+                    <div id="messageContainer"></div>
+
+                    <!-- Profile Section -->
+                    <div class="settings-section active" id="profile">
+                        <form id="profileForm" class="settings-form">
+                            <div class="profile-avatar">
+                                <img src="" alt="Profile" id="profileAvatar">
+                                <button type="button" class="btn-secondary" id="changeAvatarBtn">
+                                    <i class="fas fa-camera"></i> Change Avatar
+                                </button>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="fullName">Full Name</label>
+                                <input type="text" id="fullName" name="fullName" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="institution">Institution</label>
+                                <input type="text" id="institution" name="institution" placeholder="School/College name">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="fieldOfStudy">Field of Study</label>
+                                <input type="text" id="fieldOfStudy" name="fieldOfStudy" placeholder="e.g. Computer Science">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="bio">Bio</label>
+                                <textarea id="bio" name="bio" rows="3" placeholder="Tell us about yourself"></textarea>
+                            </div>
+                            
+                            <button type="submit" class="btn-primary">
+                                <span>Save Changes</span>
+                                <div class="spinner"></div>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Account Section -->
+                    <div class="settings-section" id="account">
+                        <form id="accountForm" class="settings-form">
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" readonly>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="recoveryEmail">Recovery Email</label>
+                                <input type="email" id="recoveryEmail" placeholder="Backup email address">
+                            </div>
+                            
+                            <div class="password-section">
+                                <h3>Change Password</h3>
+                                <div class="form-group">
+                                    <label for="currentPassword">Current Password</label>
+                                    <div class="input-wrapper">
+                                        <input type="password" id="currentPassword">
+                                        <i class="fas fa-eye-slash toggle-password"></i>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="newPassword">New Password</label>
+                                    <div class="input-wrapper">
+                                        <input type="password" id="newPassword">
+                                        <i class="fas fa-eye-slash toggle-password"></i>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="confirmPassword">Confirm New Password</label>
+                                    <div class="input-wrapper">
+                                        <input type="password" id="confirmPassword">
+                                        <i class="fas fa-eye-slash toggle-password"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="btn-primary">
+                                <span>Update Account</span>
+                                <div class="spinner"></div>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Appearance Section -->
+                    <div class="settings-section" id="appearance">
+                        <div class="theme-section">
+                            <h3>Theme</h3>
+                            <div class="theme-options">
+                                <button type="button" class="theme-btn" data-theme="light">
+                                    <i class="fas fa-sun"></i>
+                                    <span>Light</span>
+                                </button>
+                                <button type="button" class="theme-btn active" data-theme="dark">
+                                    <i class="fas fa-moon"></i>
+                                    <span>Dark</span>
+                                </button>
+                                <button type="button" class="theme-btn" data-theme="system">
+                                    <i class="fas fa-desktop"></i>
+                                    <span>System</span>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="color-section">
+                            <h3>Accent Color</h3>
+                            <div class="color-options">
+                                <button type="button" class="color-btn active" data-color="pink" style="--color: #FF1493"></button>
+                                <button type="button" class="color-btn" data-color="blue" style="--color: #007AFF"></button>
+                                <button type="button" class="color-btn" data-color="purple" style="--color: #6B46C1"></button>
+                                <button type="button" class="color-btn" data-color="green" style="--color: #10B981"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/settings.js"></script>
+    <script src="js/common.js"></script>
+</body>
+</html>

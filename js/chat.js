@@ -11,7 +11,7 @@ const themeToggle = document.getElementById('themeToggle');
 const clearButton = document.querySelector('.tool-btn[title="Clear Chat"]');
 const quickActionButtons = document.querySelectorAll('.action-btn');
 
-// Chat History
+// Initialize chat history with user-specific key
 let chatHistory = [{
     role: 'model',
     parts: [{ text: 'You are a helpful AI learning assistant. You help students understand concepts, solve problems, and learn effectively.' }]
@@ -19,13 +19,56 @@ let chatHistory = [{
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
-    const savedHistory = localStorage.getItem('chatHistory');
+    // Check authentication first
+    const session = JSON.parse(localStorage.getItem('session'));
+    if (!session || !session.isAuthenticated) {
+        window.location.href = 'index.html';
+        return;
+    }
+
+    const userEmail = session.userEmail;
+    if (!userEmail) {
+        window.location.href = 'index.html';
+        return;
+    }
+
+    // Initialize chat interface
+    initializeChat(userEmail);
+});
+
+function initializeChat(userEmail) {
+    // Load saved history if exists
+    const savedHistory = localStorage.getItem(`chatHistory_${userEmail}`);
     if (savedHistory) {
         chatHistory = JSON.parse(savedHistory);
         renderChatHistory();
     }
+
+    // Get current session if resuming
+    const currentSession = localStorage.getItem('currentSession');
+    if (currentSession && subjectSelect) {
+        setSubjectBasedOnSession(currentSession);
+    }
+
+    // Set up event listeners
     userInput.addEventListener('input', autoResizeTextarea);
-});
+    chatForm.addEventListener('submit', handleSubmit);
+    clearButton.addEventListener('click', clearChat);
+    themeToggle.addEventListener('click', toggleTheme);
+    quickActionButtons.forEach(btn => btn.addEventListener('click', handleQuickAction));
+}
+
+function setSubjectBasedOnSession(currentSession) {
+    if (currentSession.includes('Python') || currentSession.includes('Programming')) {
+        subjectSelect.value = 'programming';
+    } else if (currentSession.includes('Machine Learning')) {
+        subjectSelect.value = 'science';
+    } else if (currentSession.includes('Database')) {
+        subjectSelect.value = 'general';
+    }
+    // Clear the current session after setting subject
+    localStorage.removeItem('currentSession');
+}
 
 // Event Listeners
 chatForm.addEventListener('submit', handleSubmit);
@@ -196,13 +239,18 @@ function autoResizeTextarea() {
     userInput.style.height = userInput.scrollHeight + 'px';
 }
 
+// Modified clear chat function
 function clearChat() {
+    const userEmail = JSON.parse(localStorage.getItem('session'))?.userEmail;
     chatHistory = [{
         role: 'model',
         parts: [{ text: 'You are a helpful AI learning assistant.' }]
     }];
     chatMessages.innerHTML = '';
-    localStorage.removeItem('chatHistory');
+    if (userEmail) {
+        localStorage.removeItem(`chatHistory_${userEmail}`);
+        sessionStorage.removeItem(`chat_active_${userEmail}`);
+    }
     location.reload();
 }
 
@@ -213,8 +261,12 @@ function toggleTheme() {
     icon.classList.toggle('fa-sun');
 }
 
+// Modified save chat history function
 function saveChatHistory() {
-    localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+    const userEmail = JSON.parse(localStorage.getItem('session'))?.userEmail;
+    if (userEmail) {
+        localStorage.setItem(`chatHistory_${userEmail}`, JSON.stringify(chatHistory));
+    }
 }
 
 function renderChatHistory() {

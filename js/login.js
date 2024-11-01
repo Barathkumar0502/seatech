@@ -1,65 +1,59 @@
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('loginForm');
     const messageContainer = document.getElementById('messageContainer');
+    const loginButton = document.getElementById('loginButton');
+    const togglePassword = document.getElementById('togglePassword');
+    const passwordInput = document.getElementById('password');
 
-    // Demo credentials and course data
-    const DEMO_USERS = [
-        { 
-            email: 'demo@seatech.com', 
-            password: 'demo123',
-            courses: [
-                {
-                    id: 1,
-                    title: 'Introduction to Python Programming',
-                    description: 'Learn the fundamentals of Python programming language',
-                    progress: 65,
-                    category: 'programming',
-                    status: 'in-progress',
-                    timeLeft: '12 hours',
-                    image: 'https://source.unsplash.com/random/800x600?programming'
-                },
-                {
-                    id: 2,
-                    title: 'Web Design Fundamentals',
-                    description: 'Master the basics of web design and UI principles',
-                    progress: 100,
-                    category: 'design',
-                    status: 'completed',
-                    timeLeft: '0 hours',
-                    image: 'https://source.unsplash.com/random/800x600?webdesign'
-                },
-                {
-                    id: 3,
-                    title: 'Advanced JavaScript',
-                    description: 'Deep dive into modern JavaScript development',
-                    progress: 0,
-                    category: 'programming',
-                    status: 'not-started',
-                    timeLeft: '20 hours',
-                    image: 'https://source.unsplash.com/random/800x600?javascript'
-                }
-            ]
-        }
-    ];
+    // Password visibility toggle
+    togglePassword.addEventListener('click', () => {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        togglePassword.classList.toggle('fa-eye');
+        togglePassword.classList.toggle('fa-eye-slash');
+    });
 
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
+        const email = document.getElementById('email').value.trim();
+        const password = passwordInput.value;
+
+        // Reset previous error messages
+        messageContainer.innerHTML = '';
+        
+        // Validate inputs
+        if (!email || !password) {
+            showMessage('Please fill in all fields', 'error');
+            return;
+        }
+
+        if (!isValidEmail(email)) {
+            showMessage('Please enter a valid email address', 'error');
+            return;
+        }
+
+        // Show loading state
+        setLoading(true);
 
         try {
-            const user = DEMO_USERS.find(u => u.email === email && u.password === password);
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const user = users.find(u => u.email === email);
             
-            if (!user) {
-                throw new Error('Invalid credentials');
+            if (!user || user.password !== password) {
+                throw new Error('Invalid email or password');
             }
             
-            // Store auth state and user data
-            localStorage.setItem('isAuthenticated', 'true');
-            localStorage.setItem('userEmail', email);
-            localStorage.setItem('userCourses', JSON.stringify(user.courses));
+            const session = {
+                token: generateSessionToken(),
+                expires: new Date().getTime() + (24 * 60 * 60 * 1000),
+                userEmail: email,
+                userName: user.fullName,
+                isAuthenticated: true,
+                lastLogin: new Date().toISOString()
+            };
 
+            localStorage.setItem('session', JSON.stringify(session));
             showMessage('Login successful! Redirecting...', 'success');
             
             setTimeout(() => {
@@ -68,38 +62,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             showMessage(error.message, 'error');
+        } finally {
+            setLoading(false);
         }
     });
 
+    function setLoading(isLoading) {
+        loginButton.disabled = isLoading;
+        loginButton.classList.toggle('loading', isLoading);
+    }
+
     function showMessage(message, type) {
-        const messageContainer = document.getElementById('messageContainer');
         messageContainer.innerHTML = `<div class="${type}-message">${message}</div>`;
-        setTimeout(() => {
-            messageContainer.innerHTML = '';
-        }, 3000);
     }
 
-    async function authenticateUser(email, password) {
-        // Simulate API delay
-        await new Promise(resolve => setTimeout(resolve, 1000));
-
-        // Check demo users
-        const demoUser = DEMO_USERS.find(u => u.email === email && u.password === password);
-        if (demoUser) return demoUser;
-
-        // Check registered users
-        const users = JSON.parse(localStorage.getItem('users') || '[]');
-        const user = users.find(u => u.email === email && u.password === password);
-        
-        if (!user) {
-            throw new Error('Invalid email or password');
-        }
-
-        return user;
+    function isValidEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
 
-    // Check if user is already logged in
-    if (localStorage.getItem('isAuthenticated') === 'true') {
-        window.location.href = 'dashboard.html';
+    function generateSessionToken() {
+        return Math.random().toString(36).substring(2) + Date.now().toString(36);
     }
 });

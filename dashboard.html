@@ -12,7 +12,7 @@
 </head>
 <body>
     <script>
-        if (localStorage.getItem('isAuthenticated') !== 'true') {
+        if (!localStorage.getItem('isAuthenticated')) {
             window.location.href = 'index.html';
         }
     </script>
@@ -40,6 +40,7 @@
                 <a href="#"><i class="fas fa-brain"></i> Learning Style</a>
                 <a href="#"><i class="fas fa-chart-line"></i> Progress</a>
                 <a href="#"><i class="fas fa-heart"></i> Wellness</a>
+                <a href="settings.html"><i class="fas fa-cog"></i> Settings</a>
             </nav>
 
             <!-- Mood Tracker -->
@@ -218,5 +219,6 @@
     </div>
 
     <script src="dashboard.js"></script>
+    <script src="js/common.js"></script>
 </body>
 </html> 

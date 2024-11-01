@@ -1,4 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Add this at the beginning of the DOMContentLoaded event
+    const session = JSON.parse(localStorage.getItem('session'));
+    if (!session || !session.isAuthenticated) {
+        window.location.href = 'index.html';
+        return;
+    }
+
     // Initialize mood buttons
     const moodButtons = document.querySelectorAll('.mood-btn');
     const resumeButtons = document.querySelectorAll('.resume-btn');
@@ -16,15 +23,15 @@ document.addEventListener('DOMContentLoaded', () => {
     resumeButtons.forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
+            const sessionTitle = btn.parentElement.querySelector('.session-info h4').textContent;
+            localStorage.setItem('currentSession', sessionTitle);
             window.location.href = 'chat.html';
         });
     });
 
     // Initialize logout
     logoutBtn?.addEventListener('click', () => {
-        localStorage.removeItem('isAuthenticated');
-        localStorage.removeItem('userEmail');
-        window.location.href = 'seatech1.html';
+        logout();
     });
 
     function saveMood(mood) {
@@ -41,5 +48,18 @@ document.addEventListener('DOMContentLoaded', () => {
         toast.textContent = message;
         document.body.appendChild(toast);
         setTimeout(() => toast.remove(), 3000);
+    }
+
+    document.querySelector('.new-session-btn').addEventListener('click', (e) => {
+        e.preventDefault();
+        localStorage.removeItem('currentSession'); // Ensure no session is active
+        window.location.href = 'chat.html';
+    });
+
+    function logout() {
+        localStorage.removeItem('session');
+        localStorage.removeItem('chatHistory_' + JSON.parse(localStorage.getItem('session'))?.userEmail);
+        localStorage.removeItem('moods');
+        window.location.href = 'index.html';
     }
 }); 

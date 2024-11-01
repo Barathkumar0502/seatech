@@ -2,13 +2,24 @@ const { GEMINI_API_KEY, API_ENDPOINT } = CONFIG;
 
 // Core function to generate study plan
 async function generateStudyPlan() {
-    const subject = document.getElementById('subject').value;
-    const goal = document.getElementById('goal').value;
-    const hours = document.getElementById('hours').value;
-    const days = document.getElementById('days').value;
+    const subject = document.getElementById('subject').value.trim();
+    const goal = document.getElementById('goal').value.trim();
+    const hours = parseInt(document.getElementById('hours').value);
+    const days = parseInt(document.getElementById('days').value);
 
-    if (!subject || !goal || !hours || !days) {
-        showMessage('Please fill in all fields', 'error');
+    // Enhanced validation
+    if (!subject || !goal) {
+        showMessage('Please fill in all text fields', 'error');
+        return;
+    }
+
+    if (isNaN(hours) || hours < 1 || hours > 24) {
+        showMessage('Please enter valid hours (1-24)', 'error');
+        return;
+    }
+
+    if (isNaN(days) || days < 1 || days > 90) {
+        showMessage('Please enter valid days (1-90)', 'error');
         return;
     }
 
@@ -16,34 +27,34 @@ async function generateStudyPlan() {
     generateBtn.disabled = true;
 
     try {
-        const prompt = `Create a detailed ${days}-day study plan for ${subject}. 
-            Goal: ${goal}. Daily study time: ${hours} hours.
-            Include daily schedule, topics breakdown, and milestones.`;
-
         const response = await fetch(CONFIG.API_ENDPOINT + '/study-plan', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                subject: subject,
-                goal: goal,
-                hours: hours,
-                days: days
+                subject,
+                goal,
+                hours,
+                days
             })
         });
 
         if (!response.ok) {
-            throw new Error('Failed to generate plan');
+            throw new Error(`HTTP error! status: ${response.status}`);
         }
 
         const data = await response.json();
+        if (!data.candidates?.[0]?.content?.parts?.[0]?.text) {
+            throw new Error('Invalid response format');
+        }
+
         const plan = data.candidates[0].content.parts[0].text;
         displayPlan(plan, subject, goal, hours, days);
 
     } catch (error) {
         console.error('Error:', error);
-        showMessage('Failed to generate plan. Please try again.', 'error');
+        showMessage(`Failed to generate plan: ${error.message}`, 'error');
     } finally {
         generateBtn.disabled = false;
     }
