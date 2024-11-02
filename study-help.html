@@ -7,17 +7,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="css/study-help.css">
-    <link rel="stylesheet" href="css/styles.css">
     <link rel="icon" type="image/x-icon" href="https://api.dicebear.com/6.x/identicon/svg?seed=SeaTech">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <script>
-        const session = JSON.parse(localStorage.getItem('session'));
-        if (!session || !session.isAuthenticated) {
-            window.location.href = 'index.html';
-        }
-    </script>
-
     <div class="dashboard-container">
         <!-- Sidebar -->
         <aside class="sidebar">
@@ -41,9 +34,6 @@
                 <a href="#"><i class="fas fa-brain"></i> Learning Style</a>
                 <a href="#"><i class="fas fa-chart-line"></i> Progress</a>
                 <a href="#"><i class="fas fa-heart"></i> Wellness</a>
-                <a href="#" id="logoutBtn" class="logout-btn">
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                </a>
             </nav>
         </aside>
 
@@ -129,7 +119,7 @@
     </div>
 
     <script src="config.js"></script>
-    <script src="study-help.js"></script>
+    <script src="js/study-help.js"></script>
     <script src="js/common.js"></script>
 </body>
 </html> 

@@ -1,68 +1,93 @@
 const { GEMINI_API_KEY, API_ENDPOINT } = CONFIG;
 
 // Core function to generate study plan
-async function generateStudyPlan() {
-    const subject = document.getElementById('subject').value.trim();
-    const goal = document.getElementById('goal').value.trim();
-    const hours = parseInt(document.getElementById('hours').value);
-    const days = parseInt(document.getElementById('days').value);
+async function generateStudyPlan(e) {
+    e.preventDefault();
+    
+    const subject = document.getElementById('subject').value;
+    const goal = document.getElementById('goal').value;
+    const hours = document.getElementById('hours').value;
+    const days = document.getElementById('days').value;
 
-    // Enhanced validation
-    if (!subject || !goal) {
-        showMessage('Please fill in all text fields', 'error');
-        return;
-    }
-
-    if (isNaN(hours) || hours < 1 || hours > 24) {
-        showMessage('Please enter valid hours (1-24)', 'error');
-        return;
-    }
-
-    if (isNaN(days) || days < 1 || days > 90) {
-        showMessage('Please enter valid days (1-90)', 'error');
+    if (!subject || !goal || !hours || !days) {
+        showMessage('Please fill in all fields', 'error');
         return;
     }
 
     const generateBtn = document.querySelector('.submit-btn');
+    const planResult = document.getElementById('planResult');
     generateBtn.disabled = true;
+    generateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+    planResult.innerHTML = '<div class="loading">Generating your personalized study plan...</div>';
 
     try {
-        const response = await fetch(CONFIG.API_ENDPOINT + '/study-plan', {
+        const response = await fetch(API_ENDPOINT, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'x-goog-api-key': GEMINI_API_KEY
             },
             body: JSON.stringify({
-                subject,
-                goal,
-                hours,
-                days
+                contents: [{
+                    parts: [{
+                        text: `As an educational expert, create a detailed ${days}-day study plan for ${subject}.
+                        
+                        Student's Goal: ${goal}
+                        Available Study Time: ${hours} hours per day
+                        
+                        Please provide a structured study plan following this format:
+                        
+                        # Overview
+                        [Brief introduction about the study plan and its objectives]
+                        
+                        # Daily Schedule
+                        ## Day 1
+                        - Morning (${Math.round(hours/2)} hours):
+                          * [Specific topics/activities]
+                        - Evening (${Math.round(hours/2)} hours):
+                          * [Specific topics/activities]
+                        
+                        [Continue for each day with specific topics and time allocations]
+                        
+                        # Study Resources
+                        - [Required textbooks/materials]
+                        - [Online resources]
+                        - [Practice materials]
+                        
+                        # Success Strategies
+                        - [Study techniques]
+                        - [Time management tips]
+                        - [Progress tracking methods]
+                        
+                        Make the plan specific to ${subject} and align it with the goal: ${goal}`
+                    }]
+                }]
             })
         });
 
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            throw new Error('Failed to generate study plan');
         }
 
         const data = await response.json();
-        if (!data.candidates?.[0]?.content?.parts?.[0]?.text) {
-            throw new Error('Invalid response format');
-        }
-
         const plan = data.candidates[0].content.parts[0].text;
         displayPlan(plan, subject, goal, hours, days);
+        showMessage('Study plan generated successfully!', 'success');
 
     } catch (error) {
         console.error('Error:', error);
-        showMessage(`Failed to generate plan: ${error.message}`, 'error');
+        planResult.innerHTML = '<div class="error-message">Failed to generate plan. Please try again.</div>';
+        showMessage('Failed to generate plan', 'error');
     } finally {
         generateBtn.disabled = false;
+        generateBtn.innerHTML = '<i class="fas fa-calendar-plus"></i> Generate Study Plan';
     }
 }
 
 // Display the generated plan
 function displayPlan(plan, subject, goal, hours, days) {
     const sections = plan.split('#').filter(Boolean);
+    const planResult = document.getElementById('planResult');
     
     planResult.innerHTML = `
         <div class="plan-content">
@@ -103,7 +128,6 @@ function displayPlan(plan, subject, goal, hours, days) {
         </div>
     `;
 
-    // Scroll to result
     planResult.scrollIntoView({ behavior: 'smooth' });
 }
 
@@ -115,20 +139,53 @@ function formatContent(content) {
             line = line.trim();
             if (!line) return '';
             
-            // Format day headers
             if (line.match(/^Day \d+/i)) {
                 return `<h5 class="day-title">${line}</h5>`;
             }
             
-            // Format lists
             if (line.match(/^[-•*]/)) {
                 return `<li>${line.replace(/^[-•*]/, '').trim()}</li>`;
             }
             
-            // Format regular text
             return `<p>${line}</p>`;
         })
         .join('');
+}
+
+// Generate daily table rows
+function generateDailyTable(days, plan, hours) {
+    let tableRows = '';
+    const dailyContent = plan.split('Day').filter(Boolean);
+    
+    for (let i = 1; i <= days; i++) {
+        const dayContent = dailyContent.find(content => content.startsWith(` ${i}`)) || '';
+        const topics = extractTopics(dayContent);
+        
+        tableRows += `
+            <tr>
+                <td>Day ${i}</td>
+                <td>
+                    <div class="topic-pills">
+                        ${topics.map(topic => `<span class="topic-pill">${topic}</span>`).join('')}
+                    </div>
+                </td>
+                <td>${hours} hours</td>
+                <td>
+                    <select class="status-select" onchange="updateStatus(this, ${i})">
+                        <option value="pending">Pending</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="completed">Completed</option>
+                    </select>
+                </td>
+            </tr>
+        `;
+    }
+    return tableRows;
+}
+
+function extractTopics(dayContent) {
+    const topics = dayContent.match(/[-•*]\s*(.*?)(?=[-•*]|$)/g) || [];
+    return topics.map(topic => topic.replace(/[-•*]\s*/, '').trim()).slice(0, 3);
 }
 
 // Utility functions
@@ -172,21 +229,14 @@ function showMessage(message, type = 'info') {
 }
 
 // Event listeners
-document.addEventListener('DOMContentLoaded', () => {
-    const generateBtn = document.getElementById('generatePlan');
-    const studyPlanForm = document.getElementById('studyPlanForm');
+document.getElementById('studyPlanForm').addEventListener('submit', generateStudyPlan);
 
-    if (generateBtn) {
-        generateBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            generateStudyPlan();
-        });
-    }
-
-    if (studyPlanForm) {
-        studyPlanForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            generateStudyPlan();
-        });
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('studyPlanForm');
+    if (form) {
+        form.addEventListener('submit', generateStudyPlan);
+    } else {
+        console.error("Form element not found!");
     }
 });

@@ -200,7 +200,6 @@ function addMessageToChat(role, content) {
     chatMessages.appendChild(messageDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
-
 // Quick Action Handler
 function handleQuickAction(e) {
     const action = e.currentTarget.textContent.trim();

@@ -102,7 +102,6 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('accentColor', color);
         });
     });
-
     // Password visibility toggle
     togglePasswordBtns.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -200,3 +199,4 @@ function setAccentColor(color) {
     document.documentElement.style.setProperty('--primary-color', colors[color].primary);
     document.documentElement.style.setProperty('--secondary-color', colors[color].secondary);
 }
+
