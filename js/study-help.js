@@ -75,7 +75,7 @@ async function generateStudyPlan(e) {
         showMessage('Study plan generated successfully!', 'success');
 
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Error details:', error);
         planResult.innerHTML = '<div class="error-message">Failed to generate plan. Please try again.</div>';
         showMessage('Failed to generate plan', 'error');
     } finally {
